@@ -2,6 +2,21 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Nav from "../components/nav.jsx";
 import { useNavigate, useParams } from "react-router-dom";
+import {
+  Button,
+  Box,
+  TextField,
+  Checkbox,
+  FormControlLabel,
+  createTheme,
+  ThemeProvider,
+} from "@mui/material";
+
+const darkTheme = createTheme({
+  palette: {
+    mode: "dark",
+  },
+});
 
 const Edit = (props) => {
   const [name, setName] = useState("");
@@ -61,110 +76,150 @@ const Edit = (props) => {
       });
   };
   return (
-    <div>
-      <Nav title={`Edit ${name}`} />
-      <form onSubmit={submitHandler}>
-        {/* Name */}
-        <div>
-          <label className="label">Name:</label>
-          <input
-            className="input"
-            type="text"
-            onChange={(e) => setName(e.target.value)}
-            value={name}
-          />
-          {errors.name ? (
-            <p className="text-danger">{errors.name.message}</p>
-          ) : null}
-        </div>
+    <ThemeProvider theme={darkTheme}>
+      <div>
+        <Nav title={`Edit ${name}`} />
+        <form onSubmit={submitHandler}>
+          <Box
+            component="form"
+            sx={{
+              "& .MuiTextField-root": { m: 1, width: "25ch" },
+            }}
+            noValidate
+            autoComplete="off"
+          >
+            {/* Name */}
+            <div>
+              <TextField
+                required
+                id="outlined-required"
+                value={name}
+                label="Name"
+                type="text"
+                onChange={(e) => setName(e.target.value)}
+                style={{ color: "white", borderColor: "white" }}
+                InputLabelProps={{ style: { color: "white" } }}
+                InputProps={{ style: { color: "white" } }}
+              />
+              {errors.name ? (
+                <p className="text-danger">{errors.name.message}</p>
+              ) : null}
+            </div>
 
-        {/* Id */}
-        <div>
-          <label className="label">ID:</label>
-          <input
-            className="input"
-            type="number"
-            onChange={(e) => setNumericId(e.target.value)}
-            value={numericId}
-          />
-          {errors.numericId ? (
-            <p className="text-danger">{errors.numericId.message}</p>
-          ) : null}
-        </div>
+            {/* Id */}
+            <div>
+              <TextField
+                required
+                id="outlined-required"
+                value={numericId}
+                label="ID"
+                type="number"
+                className="input"
+                onChange={(e) => setNumericId(e.target.value)}
+                style={{ color: "white", borderColor: "white" }}
+                InputLabelProps={{ style: { color: "white" } }}
+                InputProps={{ style: { color: "white" } }}
+              />
+              {errors.numericId ? (
+                <p className="text-danger">{errors.numericId.message}</p>
+              ) : null}
+            </div>
 
-        {/* PartnerSkill */}
-        <div>
-          <label className="label">Partner Skill:</label>
-          <input
-            className="input"
-            type="text"
-            onChange={(e) => setPartnerSkill(e.target.value)}
-            value={partnerSkill}
-          />
-          {errors.partnerSkill ? (
-            <p className="text-danger">{errors.partnerSkill.message}</p>
-          ) : null}
-        </div>
+            {/* PartnerSkill */}
+            <div>
+              <TextField
+                required
+                label="Partner Skill"
+                type="text"
+                variant="outlined"
+                value={partnerSkill}
+                onChange={(e) => setPartnerSkill(e.target.value)}
+                style={{ color: "white", borderColor: "white" }}
+                InputLabelProps={{ style: { color: "white" } }}
+                InputProps={{ style: { color: "white" } }}
+              />
+              {errors.partnerSkill ? (
+                <p className="text-danger">{errors.partnerSkill.message}</p>
+              ) : null}
+            </div>
 
-        {/* Type */}
-        <div>
-          <label className="label">Type:</label>
-          <input
-            className="input"
-            type="text"
-            onChange={(e) => setType(e.target.value)}
-            value={type}
-          />
-          {errors.type ? (
-            <p className="text-danger">{errors.type.message}</p>
-          ) : null}
-        </div>
+            {/* Type */}
+            <div>
+              <TextField
+                required
+                label="Type"
+                type="text"
+                variant="outlined"
+                value={type}
+                onChange={(e) => setType(e.target.value)}
+                style={{ color: "white", borderColor: "white" }}
+                InputLabelProps={{ style: { color: "white" } }}
+                InputProps={{ style: { color: "white" } }}
+              />
+              {errors.type ? (
+                <p className="text-danger">{errors.type.message}</p>
+              ) : null}
+            </div>
 
-        {/* Color */}
-        <div>
-          <label className="label">Color:</label>
-          <input
-            className="input"
-            type="text"
-            onChange={(e) => setColor(e.target.value)}
-            value={color}
-          />
-          {errors.color ? (
-            <p className="text-danger">{errors.color.message}</p>
-          ) : null}
-        </div>
+            {/* Color */}
+            <div>
+              <TextField
+                required
+                label="Color"
+                type="text"
+                variant="outlined"
+                value={color}
+                onChange={(e) => setColor(e.target.value)}
+                style={{ color: "white", borderColor: "white" }}
+                InputLabelProps={{ style: { color: "white" } }}
+                InputProps={{ style: { color: "white" } }}
+              />
+              {errors.color ? (
+                <p className="text-danger">{errors.color.message}</p>
+              ) : null}
+            </div>
 
-        {/* is Discovered */}
-        <div>
-          <label className="form-label">Discovered:</label>
-          <input
-            className=""
-            type="checkbox"
-            onChange={() => setIsDiscovered(!isDiscovered)}
-            checked={isDiscovered}
-          />
-          {errors.isDiscovered ? (
-            <p className="text-danger">{errors.isDiscovered.message}</p>
-          ) : null}
-        </div>
+            {/* is Discovered */}
+            <div>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={isDiscovered}
+                    onChange={() => setIsDiscovered(!isDiscovered)}
+                    color="primary"
+                    InputLabelProps={{ style: { color: "white" } }}
+                  />
+                }
+                label="Discovered"
+              />
+              {errors.isDiscovered ? (
+                <p className="text-danger">{errors.isDiscovered.message}</p>
+              ) : null}
+            </div>
 
-        {/* is Captured */}
-        <div>
-          <label className="form-label">Captured:</label>
-          <input
-            className=""
-            type="checkbox"
-            onChange={() => setIsCaptured(!isCaptured)}
-            checked={isCaptured}
-          />
-          {errors.isCaptured ? (
-            <p className="text-danger">{errors.isCaptured.message}</p>
-          ) : null}
-        </div>
+            {/* is Captured */}
+            <div>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={isCaptured}
+                    onChange={() => setIsCaptured(!isCaptured)}
+                    color="primary"
+                    InputLabelProps={{ style: { color: "white" } }}
+                  />
+                }
+                label="Captured"
+              />
+              {errors.isCaptured ? (
+                <p className="text-danger">{errors.isCaptured.message}</p>
+              ) : null}
+            </div>
+          </Box>
 
-        <button>Edit</button>
-      </form>
-    </div>
+          <Button type="submit">Edit</Button>
+        </form>
+      </div>
+    </ThemeProvider>
   );
 };
 

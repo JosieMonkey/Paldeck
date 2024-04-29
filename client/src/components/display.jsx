@@ -1,6 +1,31 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
+
+import {
+  createTheme,
+  ThemeProvider,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Paper,
+  TableRow,
+  TableHead,
+  TableContainer,
+  TableCell,
+  TableBody,
+  Table,
+  Link,
+  Select,
+  Box,
+  TextField,
+} from "@mui/material";
+
+const darkTheme = createTheme({
+  palette: {
+    mode: "dark",
+  },
+});
 
 const DisplayAll = (props) => {
   const [pals, setPals] = useState([]);
@@ -19,19 +44,16 @@ const DisplayAll = (props) => {
   }, []);
 
   const filteredPals = pals.filter((pal) => {
-    if (!searchTerm) return true; // If no search term is entered, don't filter the pals
+    if (!searchTerm) return true;
 
     if (searchFilter === "ID") {
-      // If filtering by ID (numericId), convert both the pal's numericId and the searchTerm to strings for comparison
       return pal.numericId.toString().includes(searchTerm);
     } else if (searchFilter === "Type" || searchFilter === "Color") {
-      // If filtering by Type or Color, which are arrays, convert array elements to string and check if it includes the searchTerm
       return pal[searchFilter.toLowerCase()]
         .join(", ")
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
     } else {
-      // For other string filters, perform a case-insensitive comparison
       return pal[searchFilter.toLowerCase()]
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
@@ -47,55 +69,83 @@ const DisplayAll = (props) => {
   };
 
   return (
-    <>
+    <ThemeProvider theme={darkTheme}>
       <div>
         <div>
-          <input
-            type="text"
-            onChange={handleSearchChange}
-            placeholder={`Search by ${searchFilter}`}
-            title="Type in a name"
-          />
-          <select onChange={handleFilterChange} value={searchFilter}>
-            <option value="Name">Name</option>
-            <option value="ID">ID</option>
-            <option value="Type">Type</option>
-            <option value="Color">Color</option>
-          </select>
+          <Box sx={{ minWidth: 120 }} style={{ marginBottom: "20px" }}>
+            <TextField
+              id=""
+              label="Search"
+              title="Type in a name"
+              defaultValue=""
+              type="text"
+              onChange={handleSearchChange}
+              placeholder={`Search by ${searchFilter}`}
+            />
+
+            <FormControl>
+              <InputLabel>Name</InputLabel>
+              <Select
+                value={searchFilter}
+                label="search"
+                onChange={handleFilterChange}
+              >
+                <MenuItem value={"Name"}>Name</MenuItem>
+                <MenuItem value={"ID"}>ID</MenuItem>
+                <MenuItem value={"Type"}>Type</MenuItem>
+                <MenuItem value={"Color"}>Color</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
         </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>ID</th>
-              <th>Partner Skill</th>
-              <th>Type</th>
-              <th>Color</th>
-              <th>Discovered</th>
-              <th>Captured</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredPals.map((pal) => (
-              <tr key={pal._id}>
-                <td>
-                  <Link to={`/pals/${pal._id}/palpage`}>{pal.name}</Link>
-                </td>
-                <td>{pal.numericId}</td>
-                <td>{pal.partnerSkill}</td>
-                <td>{pal.type}</td>
-                <td>{pal.color}</td>
-                <td>{pal.isDiscovered ? "Yes" : "No"}</td>
-                <td>{pal.isCaptured ? "Yes" : "No"}</td>
-                <td>
-                  <Link to={`/pals/${pal._id}/edit`}>Edit</Link>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Name</TableCell>
+                <TableCell>ID</TableCell>
+                <TableCell>Partner Skill</TableCell>
+                <TableCell>Type</TableCell>
+                <TableCell>Color</TableCell>
+                <TableCell>Discovered</TableCell>
+                <TableCell>Captured</TableCell>
+                <TableCell>Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {filteredPals.map((pal) => (
+                <TableRow key={pal._id}>
+                  <TableCell>
+                    <Link
+                      component={RouterLink}
+                      to={`/pals/${pal._id}/palpage`}
+                      underline="none"
+                    >
+                      {pal.name}
+                    </Link>
+                  </TableCell>
+                  <TableCell>{pal.numericId}</TableCell>
+                  <TableCell>{pal.partnerSkill}</TableCell>
+                  <TableCell>{pal.type.join(", ")}</TableCell>
+                  <TableCell>{pal.color.join(", ")}</TableCell>
+                  <TableCell>{pal.isDiscovered ? "Yes" : "No"}</TableCell>
+                  <TableCell>{pal.isCaptured ? "Yes" : "No"}</TableCell>
+                  <TableCell>
+                    <Link
+                      component={RouterLink}
+                      to={`/pals/${pal._id}/edit`}
+                      underline="none"
+                    >
+                      Edit
+                    </Link>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </div>
-    </>
+    </ThemeProvider>
   );
 };
 

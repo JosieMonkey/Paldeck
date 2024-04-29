@@ -4,7 +4,7 @@ import DisplayAll from "../components/display.jsx";
 const Home = (props) => {
   return (
     <div>
-      <Nav title={"Pal Catalog"} />
+      <Nav title={"Paldeck"} />
       <DisplayAll />
     </div>
   );
