@@ -8,7 +8,7 @@ const Nav = (props) => {
         <div className="left">
           <Link to={"/"}>Catalog</Link>
           <br />
-          <Link to={"/create"}>Add Pal</Link>
+          <Link to={"/addpal"}>Add Pal</Link>
         </div>
         <div className="right">
           <h1>{title}</h1>

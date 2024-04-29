@@ -74,6 +74,9 @@ async function updatePalById(req, res) {
       runValidators: true,
       new: true,
     });
+    if (!updatedPal) {
+      return res.status(404).json({ message: "Pal not found" });
+    }
     return res.status(200).json(updatedPal);
   } catch (err) {
     return res.status(500).json(err);

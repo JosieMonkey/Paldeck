@@ -8,7 +8,7 @@ const palSchema = new Schema(
       minLength: [2, "Name must be at least 2 characters"],
       maxLength: [255, "Name cannot be more than 255 characters"],
     },
-    id: {
+    numericId: {
       type: Number,
       required: [true, "ID is required"],
       min: [1, "ID must be at least 1"],

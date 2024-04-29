@@ -4,12 +4,13 @@ import { Link } from "react-router-dom";
 
 const DisplayAll = (props) => {
   const [pals, setPals] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchFilter, setSearchFilter] = useState("Name");
 
   useEffect(() => {
     axios
       .get("http://localhost:8000/api/pals")
       .then((res) => {
-        console.log(res.data);
         setPals(res.data);
       })
       .catch((err) => {
@@ -17,22 +18,33 @@ const DisplayAll = (props) => {
       });
   }, []);
 
-  function myFunction() {
-    var input, filter, tr, th, a, i, txtValue;
-    input = document.getElementById("myInput");
-    filter = input.value.toUpperCase();
-    tr = document.getElementById("myTR");
-    th = td.getElementsByTagName("th");
-    for (i = 0; i < th.length; i++) {
-      a = th[i].getElementsByTagName("a")[0];
-      txtValue = a.textContent || a.innerText;
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
-        th[i].style.display = "";
-      } else {
-        th[i].style.display = "none";
-      }
+  const filteredPals = pals.filter((pal) => {
+    if (!searchTerm) return true; // If no search term is entered, don't filter the pals
+
+    if (searchFilter === "ID") {
+      // If filtering by ID (numericId), convert both the pal's numericId and the searchTerm to strings for comparison
+      return pal.numericId.toString().includes(searchTerm);
+    } else if (searchFilter === "Type" || searchFilter === "Color") {
+      // If filtering by Type or Color, which are arrays, convert array elements to string and check if it includes the searchTerm
+      return pal[searchFilter.toLowerCase()]
+        .join(", ")
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+    } else {
+      // For other string filters, perform a case-insensitive comparison
+      return pal[searchFilter.toLowerCase()]
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
     }
-  }
+  });
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const handleFilterChange = (event) => {
+    setSearchFilter(event.target.value);
+  };
 
   return (
     <>
@@ -40,15 +52,20 @@ const DisplayAll = (props) => {
         <div>
           <input
             type="text"
-            id="myInput"
-            onkeyup="myFunction()"
-            placeholder="Search for names.."
+            onChange={handleSearchChange}
+            placeholder={`Search by ${searchFilter}`}
             title="Type in a name"
           />
+          <select onChange={handleFilterChange} value={searchFilter}>
+            <option value="Name">Name</option>
+            <option value="ID">ID</option>
+            <option value="Type">Type</option>
+            <option value="Color">Color</option>
+          </select>
         </div>
         <table>
           <thead>
-            <tr id="myTR">
+            <tr>
               <th>Name</th>
               <th>ID</th>
               <th>Partner Skill</th>
@@ -59,19 +76,19 @@ const DisplayAll = (props) => {
             </tr>
           </thead>
           <tbody>
-            {pals.map((pal) => (
+            {filteredPals.map((pal) => (
               <tr key={pal._id}>
                 <td>
-                  <Link to={`/pals/${pal._id}/details`}>{pal.name}</Link>
+                  <Link to={`/pals/${pal._id}/palpage`}>{pal.name}</Link>
                 </td>
-                <td>{pal.id}</td>
+                <td>{pal.numericId}</td>
                 <td>{pal.partnerSkill}</td>
                 <td>{pal.type}</td>
                 <td>{pal.color}</td>
                 <td>{pal.isDiscovered ? "Yes" : "No"}</td>
                 <td>{pal.isCaptured ? "Yes" : "No"}</td>
                 <td>
-                  <Link to={`/pals/${pal._id}/update`}>Edit</Link>
+                  <Link to={`/pals/${pal._id}/edit`}>Edit</Link>
                 </td>
               </tr>
             ))}
